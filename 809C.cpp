@@ -1,50 +1,51 @@
 #include <bits/stdc++.h>
-
 typedef long long ll;
-
 using namespace std;
+const int IMAX = 100100;
+int t, n;
+ll v[IMAX];
+
+ll cost(int i) {
+	return max(0ll, max(v[i-1], v[i+1]) - v[i] + 1);
+}
 
 void solve() {
-	int n; cin >> n;
-	vector<int> v;
+	cin >> n;
 	for (int i = 0; i < n; i++) {
-		int x; cin >> x;
-		v.push_back(x);
+		cin >> v[i];
 	}
-	int cnt = 0;
-	int cnt2 = 0;
-	if (n % 2 == 1) { // odd number buildings
-		for (int i = 1; i < n; i += 2) {
-			if (v[i] <= max(v[i-1], v[i+1])) {
-				cnt += ((max(v[i-1], v[i+1]) - v[i]) + 1);
-			}
+	if (n%2 == 1) {
+		ll cnt = 0;
+		for (int i = 1; i < n-1; i += 2) {
+			cnt += cost(i);
 		}
 		cout << cnt << endl;
 		return;
-	} else {
-		vector<int> costs(n);
-		for (int i = 1; i < n; i += 2) {
-			if (v[i] <= max(v[i-1], v[i+1])) {
-				costs[i] = ((max(v[i-1], v[i+1]) - v[i]) + 1);
-			}
-		}
-		for (int i = 2; i < n; i += 2) {
-			if (v[i] <= max(v[i-1], v[i+1])) {
-				costs[i] = ((max(v[i-1], v[i+1]) - v[i]) + 1);
-			}
-		}
-		cout << min(cnt, cnt2) << endl;
-		return;
 	}
+
+	ll cnt = 0;
+	for (int i = 1; i < n-1; i += 2) {
+		cnt += cost(i);
+	}
+	ll global_min = cnt;
+	for (int i = n-2; i > 1; i -= 2) {
+		cnt -= cost(i-1);
+		cnt += cost(i);
+		global_min = min(cnt, global_min);
+	}
+	cout << global_min << endl;
+	return;
 }
 
 int main() {
+	ios_base::sync_with_stdio(false);
+	cin.tie(NULL);
 	#ifndef ONLINE_JUDGE
 		clock_t tStart = clock();
 		freopen("input.txt", "r", stdin);
 		freopen("output.txt", "w", stdout);
 	#endif
-	int t; cin >> t;
+	cin >> t;
 	while (t--) {
 		solve();
 	}
