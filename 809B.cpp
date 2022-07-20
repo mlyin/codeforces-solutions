@@ -4,33 +4,26 @@ typedef long long ll;
 
 using namespace std;
 
-void solve() {
-	int n; cin >> n;
-	int a[n+1];
-	for (int i = 1; i <= n; i++) {
-		cin >> a[i];
-	}
-	int res[n+1];
-	int dp[n+1][n+1];
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			if (a[j] == i) dp[i][j] = 1;
+const int IMAX = 100100;
+
+int t, n;
+
+vector<int> a[IMAX];
+
+int solve(int x) {
+	if (a[x].empty()) return 0;
+	int curr = a[x][0];
+	int ans = 1;
+	for (int i = 0; i < a[x].size(); i++) {
+		if (a[x][i] % 2 != curr % 2) {
+			ans++;
+			curr = a[x][i];
+		} else {
+			curr = a[x][i];
 		}
 	}
-	for (int i = 1; i <= n; i++) {
-		for (int j = 1; j <= n; j++) {
-			cout << dp[i][j] << " ";
-		}
-		cout << "\n";
-	}
-	cout << "\n";
-	for (int i = 1; i <= n; i++) {
-		res[i] = dp[i][n];
-	}
-	for (int i = 1; i <= n; i++) {
-		cout << res[i] << " ";
-	}
-	cout << "\n";
+	return ans;
+
 }
 
 int main() {
@@ -39,9 +32,22 @@ int main() {
 		freopen("input.txt", "r", stdin);
 		freopen("output.txt", "w", stdout);
 	#endif
-	int t; cin >> t;
+	cin >> t;
 	while (t--) {
-		solve();
+		cin >> n;
+		for (int i = 1; i <= n; i++) {
+			a[i].clear();
+		}
+		for (int i = 1; i <= n; i++) {
+			int x; cin >> x;
+			a[x].push_back(i); //contains all indices of occurrences
+		}
+		for (int i = 1; i <= n; i++) {
+			cout << solve(i) << " ";
+			if (i == n) {
+				cout << "\n";
+			}
+		}
 	}
 	return 0;
 }
